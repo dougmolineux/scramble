@@ -1,0 +1,28 @@
+Scramble v0.2
+
+Written by Doug Molineux
+
+Simple C program that unscrambles a collection of letters to reveal real words. 
+words is a words list file that scramble depends on. This must exist inside the 
+local directory of the scramble executable. To run scramble execute (in Linux):
+
+	./scramble
+
+With scramble comes a very simple regression test script that compares real 
+output to expected output.
+
+If you need to generate a words list, you can do so with aspell: 
+
+	// installs aspell (using yum installer)
+	yum install aspell
+
+	// extract word list to words file
+	aspell dump master > words
+
+3/1/2012
+ - Added a regression directory
+ - Added executable
+ - Updated scramble.c
+
+2/2/2012
+ - Added project to Github, contains .c file and words list
