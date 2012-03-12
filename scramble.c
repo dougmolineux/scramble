@@ -7,6 +7,7 @@
 //
 // DJM - Modified 3/12/2012
 // - Added some rudimentary strcat's to increase accuracy of hash decrypt
+// - Added makefile to compile source
 //
 // DJM - Modified 3/2/2012
 // - Added support for unscrambling md5 hashes using openssl/md5.h include
@@ -16,10 +17,11 @@
 // - Made the currentLine and input global for easy function access
 //
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<openssl/md5.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <openssl/md5.h>
+#include "hash.c"
 
 #define MAX_CHAR_SIZE 80
 
@@ -35,36 +37,6 @@ char input[MAX_CHAR_SIZE];
 int mode = 1;
 
 char md5Line[MAX_CHAR_SIZE];
-
-// char *str2md5(const char *str[MAX_CHAR_SIZE], int length) {
-char *str2md5(char *str[MAX_CHAR_SIZE], int length) {
-
-	int n;
-	MD5_CTX c;
-	unsigned char digest[16];
-	char *out = (char*)malloc(33);
-
-	MD5_Init(&c);
-
-	while (length > 0) {
-        	if (length > 512) {
-            		MD5_Update(&c, str, 512);
-        	} else {
-            		MD5_Update(&c, str, length);
-        	}
-        	length -= 512;
-        	str += 512;
-    	}
-
-    	MD5_Final(digest, &c);
-
-    	for (n = 0; n < 16; ++n) {
-        	snprintf(&(out[n*2]), 16*2, "%02x", (unsigned int)digest[n]);
-    	}
-
-    	return out;
-}
-
 
 void resetVars() {
 
@@ -87,7 +59,7 @@ void getUserInput() {
         // clear the screen
         system("clear");
 
-	printf("\n\tScramble 0.3\n\n \tEnter mode (1 for normal, 2 for MD5):");
+	printf("\n\tScramble 0.4\n\n \tEnter mode (1 for normal, 2 for MD5):");
 
 	scanf("%d", &mode);
 
