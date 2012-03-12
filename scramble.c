@@ -20,10 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <openssl/md5.h>
 #include "hash.c"
 
 #define MAX_CHAR_SIZE 80
+#define VERSION "Scramble 0.4"
 
 // declare the currentLine char that will contain the current line
 // that the loop pulls out of the string list file
@@ -36,12 +36,15 @@ char input[MAX_CHAR_SIZE];
 // declare mode integer; 1 - no md5, 2 - md5
 int mode = 1;
 
+// declare string that contains the hash of each line
 char md5Line[MAX_CHAR_SIZE];
 
 void resetVars() {
 
+	// reset the current line (first element to 0) 
 	currentLine[0] = 0;
 
+	// reset the value of md5Line (contains the hash of each line as we loop through words)
 	memset(md5Line, 0, sizeof(md5Line));
 
 }
@@ -59,8 +62,10 @@ void getUserInput() {
         // clear the screen
         system("clear");
 
-	printf("\n\tScramble 0.4\n\n \tEnter mode (1 for normal, 2 for MD5):");
+	// print the version and initial instructions
+	printf("\n\t%s\n\n \tEnter mode (1 for normal, 2 for MD5):", VERSION);
 
+	// receive mode that the user wants to use
 	scanf("%d", &mode);
 
         // prompt for a word to search
@@ -69,15 +74,47 @@ void getUserInput() {
         // input word
         scanf("%s", &input);
 
+	// print a new line after receiving input,
+	printf("\n");
+
+}
+
+int unscrambleWord(int fgLetters) {
+
+	// integer used for the counter
+        int i = 0;
+
+	// first make sure that the lengths of the word and of the list word is the same
+        if(strlen(currentLine) == strlen(input)) {
+
+        	// loop through each letter in the word given
+                for(i = 0; i < strlen(input); i++) {
+
+                	// search the line for the current letter, if we find it increment fgLetters
+                        if(strchr(currentLine, input[i]) != NULL)
+                        	fgLetters++;
+
+                } // end for
+
+                // once we have finished looping through the word; evaluate fgLetters
+                if(fgLetters == strlen(input)) {
+
+                	// fgLetters will be equal to the length of the word if each letter appears in the word
+                        printf("\tMatch: %s \n", currentLine);
+
+                } // end if - evaluate length of fgLetters
+
+        }
+	
+	// return the fgLetters after we have possibly incremented it
+	return fgLetters;
+
 }
 
 int main() {
 
-	// integer used for the counter
-	int i = 0; 	
-
-	// used for 2nd counter
-	int j = 0;
+	// used for counter in mode 2
+	int i = 0;
 
 	// integer that can tell if found letters match number of given letters
 	int fgLetters;
@@ -91,8 +128,6 @@ int main() {
 	// prompt the user to enter a string or md5 hash
 	getUserInput();
 
-	printf("\n");
-	
 	// reset all the vars and prepare for loop
 	resetVars();
 
@@ -108,27 +143,7 @@ int main() {
 		// if normal text is entered
 		if(mode == 1) {
 
-			// first make sure that the lengths of the word and of the list word is the same
-			if(strlen(currentLine) == strlen(input)) {
-
-				// loop through each letter in the word given
-				for(i = 0; i < strlen(input); i++) {
-
-					// search the line for the current letter, if we find it increment fgLetters
-					if(strchr(currentLine, input[i]) != NULL)
-						fgLetters++;
-	
-				}
-	
-				// once we have finished looping through the word; evaluate fgLetters
-				if(fgLetters == strlen(input)) {
-
-					// fgLetters will be equal to the length of the word if each letter appears in the word
-					printf("\tMatch: %s \n", currentLine);
-
-				}
-
-			}
+			fgLetters = unscrambleWord(fgLetters);
 
 		}
 		else if(mode == 2) {
@@ -146,13 +161,13 @@ int main() {
 			else {
 				
 				// reset counter
-				j = 0;
+				i = 0;
 
 				// loop through ints 0 - 9
-				while(j < 10) {
+				while(i < 10) {
 		
 					// convert the counter to a char array
-					sprintf(buffer, "%d", j);
+					sprintf(buffer, "%d", i);
 					
 					// concat the buffer to the current line (add int to string)
 					strcat(currentLine, buffer);
@@ -170,7 +185,7 @@ int main() {
                         		}
 
 					// increment counter
-                                        j++;
+                                        i++;
 				
 				} // close the while
 

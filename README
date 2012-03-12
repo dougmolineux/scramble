@@ -20,7 +20,7 @@ If you enter the above hash into the second mode, it will return the string
 	Match: test
 
 With scramble comes a very simple regression test script that compares real 
-output to expected output.
+output to expected output. Run reg.sh to run the regression test.
 
 If you need to generate a words list, you can do so with aspell: 
 
@@ -36,6 +36,8 @@ To compile, with debugging symbols use this:
 
 3/12/2012 
  - Increased accuracy of hash "decryptor"
+ - Moved hash function to seperate file (hash.c)
+ - Added a makefile for compilation
 
 3/2/2012
  - Added ability to unscramble hash input
